@@ -2,19 +2,19 @@ package org.springframework.boot.cloudstorage.model;
 
 public class User {
     private Integer userId;
-    private String username;
+    private String userName;
     private String salt;
     private String password;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
 
-    public User(Integer userId ,String username ,String salt, String password , String firstname, String lastname ){
+    public User(Integer userId, String userName, String salt, String password, String firstName, String lastName) {
         this.userId = userId;
-        this.username = username;
+        this.userName = userName;
         this.salt = salt;
         this.password = password;
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Integer getUserId() {
@@ -25,12 +25,13 @@ public class User {
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        if (userName.length() > 20) return userName.substring(0, 20);
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getSalt() {
@@ -49,20 +50,21 @@ public class User {
         this.password = password;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getFirstName() {
+        if (firstName.length() > 20) return firstName.substring(0, 20);
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        if (lastName.length() > 20) return lastName.substring(0, 20);
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
-
 }

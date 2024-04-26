@@ -1,14 +1,17 @@
 package org.springframework.boot.cloudstorage.model;
 
+import java.io.InputStream;
+import java.sql.Blob;
+
 public class File {
-    private int fileId;
+    private Integer fileId;
     private String fileName;
     private String contentType;
     private String fileSize;
     private Integer userId;
     private byte[] fileData;
 
-    public File(int fileId, String fileName, String contentType, String fileSize, Integer userId, byte[] fileData) {
+    public File(Integer fileId, String fileName, String contentType, String fileSize, Integer userId, byte[] fileData) {
         this.fileId = fileId;
         this.fileName = fileName;
         this.contentType = contentType;
@@ -17,11 +20,11 @@ public class File {
         this.fileData = fileData;
     }
 
-    public int getFileId() {
+    public Integer getFileId() {
         return fileId;
     }
 
-    public void setFileId(int fileId) {
+    public void setFileId(Integer fileId) {
         this.fileId = fileId;
     }
 

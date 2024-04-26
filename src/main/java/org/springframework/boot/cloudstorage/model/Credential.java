@@ -1,38 +1,32 @@
 package org.springframework.boot.cloudstorage.model;
 
-
 public class Credential {
-    private Integer credentialid;
+    private Integer credentialId;
     private String url;
     private String userName;
     private String key;
     private String password;
-    private Integer userid;
+    private Integer userId;
 
-    public Credential(Integer credentialid, String url, String userName, String key, String password, Integer userid) {
-        this.credentialid = credentialid;
+    public Credential(Integer credentialId, String url, String userName, String key, String password, Integer userId) {
+        this.credentialId = credentialId;
         this.url = url;
         this.userName = userName;
         this.key = key;
         this.password = password;
-        this.userid = userid;
+        this.userId = userId;
     }
 
-    public Credential(String url, String userName, String password) {
-        this.url = url;
-        this.userName = userName;
-        this.password = password;
+    public Integer getCredentialId() {
+        return credentialId;
     }
 
-    public Integer getCredentialid() {
-        return credentialid;
-    }
-
-    public void setCredentialid(Integer credentialid) {
-        this.credentialid = credentialid;
+    public void setCredentialId(Integer credentialId) {
+        this.credentialId = credentialId;
     }
 
     public String getUrl() {
+        if (url.length() > 100) return url.substring(0, 100);
         return url;
     }
 
@@ -41,6 +35,7 @@ public class Credential {
     }
 
     public String getUserName() {
+        if (userName.length() > 30) return userName.substring(0, 30);
         return userName;
     }
 
@@ -64,11 +59,11 @@ public class Credential {
         this.password = password;
     }
 
-    public Integer getUserid() {
-        return userid;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

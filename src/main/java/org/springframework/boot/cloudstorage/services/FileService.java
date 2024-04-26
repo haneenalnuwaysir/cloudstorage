@@ -5,49 +5,47 @@ import org.springframework.boot.cloudstorage.mapper.UserMapper;
 import org.springframework.boot.cloudstorage.model.File;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+
+import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class FileService {
     private final FileMapper fileMapper;
-    private final UserMapper userMapper;
+    private final UserService userService;
 
-    public FileService(FileMapper fileMapper, UserMapper userMapper) {
+    public FileService(FileMapper fileMapper, UserService userService) {
         this.fileMapper = fileMapper;
-        this.userMapper = userMapper;
+        this.userService = userService;
     }
 
-    public String[] getFileLists(Integer userId) {
-        return fileMapper.getFileListings(userId);
+    public Boolean isFileNameExist(String fileName) {
+        return fileMapper.getFile(fileName) != null;
     }
 
-    public void addFile(MultipartFile multipartFile, String userName) throws IOException {
-        InputStream fis = multipartFile.getInputStream();
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        int nRead;
-        byte[] data = new byte[1024];
-        while ((nRead = fis.read(data, 0, data.length)) != -1) {
-            buffer.write(data, 0, nRead);
-        }
-        buffer.flush();
-        byte[] fileData = buffer.toByteArray();
-
-        String fileName = multipartFile.getOriginalFilename();
-        String contentType = multipartFile.getContentType();
-        String fileSize = String.valueOf(multipartFile.getSize());
-        Integer userId = userMapper.getUsername(userName).getUserId();
-        File file = new File(0, fileName, contentType, fileSize, userId, fileData);
-        fileMapper.insert(file);
+    public int createFile(MultipartFile fileUpload) throws IOException, SQLException {
+        return fileMapper.insert(
+                new File(
+                        null,
+                        fileUpload.getOriginalFilename(),
+                        fileUpload.getContentType(),
+                        String.valueOf(fileUpload.getSize()),
+                        userService.getCurrentUserId(),
+                        fileUpload.getBytes()
+                )
+        );
     }
 
-    public File getFile(String fileName) {
-        return fileMapper.getFile(fileName);
+    public List<File> getFiles() {
+        return fileMapper.getAllFiles(userService.getCurrentUserId());
     }
 
-    public void deleteFile(String fileName) {
-        fileMapper.deleteFile(fileName);
+    public File getFileById(Integer fileId) {
+        return fileMapper.getFileById(fileId);
+    }
+
+    public void deleteFile(Integer fileId) {
+        fileMapper.deleteFile(fileId);
     }
 }

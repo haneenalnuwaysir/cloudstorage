@@ -16,44 +16,23 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/home")
 public class HomeController {
-
     private final FileService fileService;
-    private final UserService userService;
     private final NoteService noteService;
     private final CredentialService credentialService;
-    private final EncryptionService encryptionService;
 
-    public HomeController(
-            FileService fileService, UserService userService, NoteService noteService,
-            CredentialService credentialService, EncryptionService encryptionService) {
+    public HomeController(FileService fileService, NoteService noteService, CredentialService credentialService) {
         this.fileService = fileService;
-        this.userService = userService;
         this.noteService = noteService;
         this.credentialService = credentialService;
-        this.encryptionService = encryptionService;
     }
 
-    @GetMapping
-    public String home(
-            Authentication authentication,
-            @ModelAttribute("newFile") FileForm newFile,
-            @ModelAttribute("newNote") NoteForm newNote,
-            @ModelAttribute("newCredential") CredentialForm newCredential,
-            Model model) {
-        Integer id = getUserId(authentication);
-        model.addAttribute("files", fileService.getFileLists(id));
-        model.addAttribute("notes", noteService.getNoteLists(id));
-        model.addAttribute("credentials", credentialService.getCredentialLists(id));
-        model.addAttribute("encryptionService", encryptionService);
-
+    @GetMapping("/home")
+    public String home(Model model) {
+        model.addAttribute("files", this.fileService.getFiles());
+        model.addAttribute("notes", this.noteService.getNotes());
+        model.addAttribute("credentials", this.credentialService.getCredentials());
+        model.addAttribute("credentialService", credentialService);
         return "home";
-    }
-
-    private Integer getUserId(Authentication authentication) {
-        String userName = authentication.getName();
-        User user = userService.getUser(userName);
-        return user.getUserId();
     }
 }

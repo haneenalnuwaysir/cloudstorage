@@ -5,35 +5,37 @@ import org.springframework.boot.cloudstorage.mapper.UserMapper;
 import org.springframework.boot.cloudstorage.model.Note;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class NoteService {
-    private final UserMapper userMapper;
+    private final UserService userService;
     private final NoteMapper noteMapper;
 
-    public NoteService(UserMapper userMapper, NoteMapper noteMapper) {
-        this.userMapper = userMapper;
+
+    public NoteService(NoteMapper noteMapper, UserService userService) {
         this.noteMapper = noteMapper;
+        this.userService = userService;
     }
 
-    public void addNote(String title, String description, String userName) {
-        Integer id = userMapper.getUsername(userName).getUserId();
-        Note note = new Note(0, title, description, id);
-        noteMapper.insert(note);
+    public int createNote(Note note) {
+//        Integer id = userService.getCurrentUserId();
+        return noteMapper.insert(new Note(null, note.getNoteTitle(), note.getNoteDescription(), userService.getCurrentUserId()));
     }
 
-    public Note[] getNoteLists(Integer userId) {
-        return noteMapper.getNotesForUser(userId);
+    public List<Note> getNotes() {
+        return noteMapper.getNotes(userService.getCurrentUserId());
     }
 
-    public Note getNote(Integer noteId) {
-        return noteMapper.getNote(noteId);
+    public Note getNoteById(Integer noteId) {
+        return noteMapper.getNoteById(noteId);
+    }
+
+    public int editNote(Note note) {
+        return noteMapper.edit(new Note(note.getNoteId(), note.getNoteTitle(), note.getNoteDescription(), userService.getCurrentUserId()));
     }
 
     public void deleteNote(Integer noteId) {
         noteMapper.deleteNote(noteId);
-    }
-
-    public void editNote(Integer noteId, String title, String description) {
-        noteMapper.editNote(noteId, title, description);
     }
 }
